@@ -27,16 +27,19 @@ export const PermissionContext = createContext({} as PermissionsContextProps);
 export const PermissionsProvider = ({children}: any) => {
   const [permissions, setPermissions] = useState(permissionInitialState);
 
+  const getPermissionName = () => {
+    const permiseName =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+
+    return permiseName;
+  };
+
   const askLocationPermission = async () => {
     let permissionStatus: PermissionStatus;
 
-    if (Platform.OS === 'ios') {
-      permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    } else {
-      permissionStatus = await request(
-        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      );
-    }
+    permissionStatus = await request(getPermissionName());
 
     if (permissionStatus === 'blocked') {
       openSettings();
@@ -51,11 +54,7 @@ export const PermissionsProvider = ({children}: any) => {
   const checkLocationPermission = useCallback(async () => {
     let permissionStatus: PermissionStatus;
 
-    if (Platform.OS === 'ios') {
-      permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    } else {
-      permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    }
+    permissionStatus = await check(getPermissionName());
 
     setPermissions({
       ...permissions,
