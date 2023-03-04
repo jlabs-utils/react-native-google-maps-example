@@ -28,12 +28,12 @@ export const PermissionsProvider = ({children}: any) => {
   const [permissions, setPermissions] = useState(permissionInitialState);
 
   const getPermissionName = () => {
-    const permiseName =
+    const name =
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
 
-    return permiseName;
+    return name;
   };
 
   const askLocationPermission = async () => {
